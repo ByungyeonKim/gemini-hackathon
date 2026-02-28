@@ -1,6 +1,23 @@
-# GETA_OS: Gemini-Enhanced Training Algorithm 
-Converting raw gameplay video into structured AI training datasets.
+<div align="center">
 
+# GETA_OS  
+### Gemini-Enhanced Training Algorithm  
+
+<p><strong>Transforming Raw Gameplay Video into Structured, Training-Ready Vision Datasets</strong></p>
+
+<br/>
+
+<img src="https://github.com/user-attachments/assets/d4de6473-57cd-4d2d-84bd-1fac944ba9e2" 
+     alt="GETA_OS System Preview" 
+     width="850"/>
+
+<br/>
+
+<p>
+  <em>Automated Frame Extraction • Semantic Filtering • Auto-Annotation • One-Click Dataset Export</em>
+</p>
+
+</div>
 GETA_OS is an automated pipeline that transforms unstructured video (e.g., gaming livestreams) into training-ready computer vision datasets. By combining multimodal reasoning from Gemini with automatic object localization from YOLO, GETA_OS filters, annotates, and exports domain-specific datasets ready for model fine-tuning.
 
 ## 🎯 Why GETA_OS?
