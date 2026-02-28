@@ -1,6 +1,7 @@
 {
   "name": "geta",
   "version": "0.1.0",
+  "description": "Gemini Enhance Training Algorithm",
   "private": true,
   "scripts": {
     "dev": "next dev",
