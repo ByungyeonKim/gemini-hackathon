@@ -63,9 +63,9 @@ def collect_images(img_dir: str):
 # ── Step 1: YOLOv8 라벨링 ─────────────────────────────────────────────
 
 def run_labeling(image_paths, model_name: str, conf: float, tag: str = None):
-    print(f"\n[STEP 1] YOLOv8 Object Detection")
-    print(f"         모델: {model_name} | confidence: {conf} | tag: {tag}")
-    print(f"         이미지 수: {len(image_paths)}\n")
+    print(f"[PROCESS] Initializing YOLOv8 Object Detection...")
+    print(f"[PROCESS] Parameters: model={model_name}, confidence={conf}, tag={tag}")
+    print(f"[PROCESS] Batch size: {len(image_paths)} frames")
 
     model = YOLO(model_name)
 
@@ -78,7 +78,7 @@ def run_labeling(image_paths, model_name: str, conf: float, tag: str = None):
                 target_class_ids.append(int(idx))
         
         if not target_class_ids:
-            print(f"  [WARNING] Tag '{tag}' not found in model classes. Processing all objects.")
+            print(f"[PROCESS] WARNING: Tag '{tag}' not found in model classes.")
             tag = None
 
     coco = {
@@ -116,7 +116,7 @@ def run_labeling(image_paths, model_name: str, conf: float, tag: str = None):
         boxes = results[0].boxes
 
         if boxes is None or len(boxes) == 0:
-            print(f"  [{filename}] → No objects detected")
+            print(f"[PROCESS] Image {image_id}/{len(image_paths)}: No objects detected in {filename}")
             continue
 
         # Cross-class NMS: 같은 위치에 다른 클래스가 겹치면 confidence 높은 것만 유지
@@ -163,7 +163,7 @@ def run_labeling(image_paths, model_name: str, conf: float, tag: str = None):
             annotation_id += 1
             count += 1
 
-        print(f"  [{filename}] → {count} object(s) detected")
+        print(f"[PROCESS] Image {image_id}/{len(image_paths)}: Identified {count} labels for {filename}")
 
     return coco, model.names
 

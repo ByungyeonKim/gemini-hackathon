@@ -142,11 +142,9 @@ def process_video(video_path, tag="car", video_id="video_001"):
 
             processed_count += 1
 
-        # Trigger YOLO labeling if we found relevant frames
-        dataset_url = None
         if processed_count > 0:
             import subprocess
-            print(f"Triggering YOLO labeling for {processed_count} relevant frames...")
+            print(f"[PROCESS] Triggering YOLO labeling for {processed_count} relevant frames...")
             dataset_out = f"dataset_{video_id}"
             subprocess.run([
                 "python3", "yolo_labeling/label_and_visualize.py",
@@ -155,19 +153,18 @@ def process_video(video_path, tag="car", video_id="video_001"):
                 "--json_out", f"{dataset_out}.json",
                 "--output_dir", f"{dataset_out}_vis"
             ])
-            # The labeling script creates 'submit_dataset' by default. 
-            # Let's move it to a unique name.
+            
             if os.path.exists("submit_dataset"):
                 if os.path.exists(dataset_out):
                     shutil.rmtree(dataset_out)
                 os.rename("submit_dataset", dataset_out)
-                print(f"Training dataset ready at: {dataset_out}")
+                print(f"[PROCESS] Training dataset organized in: {dataset_out}")
 
-                # Zip the dataset for download
+                print(f"[PROCESS] Finalizing dataset archive...")
                 zip_path = shutil.make_archive(dataset_out, 'zip', dataset_out)
-                print(f"Dataset zipped at: {zip_path}")
+                print(f"[PROCESS] Dataset zipped successfully.")
 
-                # Upload zip to Supabase
+                print(f"[PROCESS] Offloading to cloud storage...")
                 zip_name = os.path.basename(zip_path)
                 storage_zip_path = f"datasets/{zip_name}"
                 with open(zip_path, "rb") as f:
@@ -181,24 +178,24 @@ def process_video(video_path, tag="car", video_id="video_001"):
                     )
                 
                 dataset_url = supabase.storage.from_("frames").get_public_url(storage_zip_path)
+                print(f"[PROCESS] Cloud offload complete.")
                 
-                # Cleanup zip and dataset folder after upload
                 os.remove(zip_path)
                 shutil.rmtree(dataset_out)
 
     finally:
-        # Clean up frames
+        print(f"[SYSTEM] Cleaning up temporary resources...")
         shutil.rmtree(output_folder)
 
     # Final output for the API bridge
-    print(json.dumps({
-        "status": "success", 
-        "video_id": video_id,
-        "processed_count": processed_count,
-        "frame_urls": frame_urls,
-        "dataset_path": f"dataset_{video_id}" if processed_count > 0 else None,
-        "dataset_url": dataset_url
-    }))
+    print(f"RESULT: {json.dumps({
+        'status': 'success', 
+        'video_id': video_id,
+        'processed_count': processed_count,
+        'frame_urls': frame_urls,
+        'dataset_path': f'dataset_{video_id}' if processed_count > 0 else None,
+        'dataset_url': dataset_url
+    })}")
 
 if __name__ == "__main__":
     import argparse

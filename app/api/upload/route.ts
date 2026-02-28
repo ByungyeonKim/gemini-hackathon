@@ -27,58 +27,44 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     await writeFile(videoPath, buffer);
 
-    // Call Python script
-    const pythonResult = await new Promise<string>((resolve, reject) => {
-      const pythonProcess = spawn("python3", [
-        "extract_frames.py",
-        "--video", videoPath,
-        "--tag", tag,
-        "--video_id", videoId
-      ]);
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const pythonProcess = spawn("python3", [
+          "extract_frames.py",
+          "--video", videoPath,
+          "--tag", tag,
+          "--video_id", videoId
+        ]);
 
-      let output = "";
-      let errorOutput = "";
+        pythonProcess.stdout.on("data", (data) => {
+          controller.enqueue(encoder.encode(data.toString()));
+        });
 
-      pythonProcess.stdout.on("data", (data) => {
-        output += data.toString();
-      });
+        pythonProcess.stderr.on("data", (data) => {
+          // We still send stderr but maybe prefix it if we want to distinguish in the UI
+          controller.enqueue(encoder.encode(`[ERROR] ${data.toString()}`));
+        });
 
-      pythonProcess.stderr.on("data", (data) => {
-        errorOutput += data.toString();
-      });
+        pythonProcess.on("close", async (code) => {
+          // Clean up temp video file
+          await unlink(videoPath).catch(console.error);
 
-      pythonProcess.on("close", (code) => {
-        if (code === 0) {
-          resolve(output);
-        } else {
-          reject(new Error(`Python process failed with code ${code}: ${errorOutput}`));
-        }
-      });
+          if (code !== 0) {
+            controller.enqueue(encoder.encode(`\n[FATAL] Process exited with code ${code}\n`));
+          }
+          controller.close();
+        });
+      }
     });
 
-    // Parse Python JSON output
-    let result;
-    try {
-      // Find the last line which should be our JSON
-      const lines = pythonResult.trim().split("\n");
-      const lastLine = lines[lines.length - 1];
-      result = JSON.parse(lastLine);
-    } catch (e) {
-      console.error("Failed to parse Python output:", pythonResult);
-      throw new Error("Invalid output from processing script.");
-    }
-
-    // Clean up temp video file
-    await unlink(videoPath).catch(console.error);
-
-    const body: UploadResponse = {
-      savedFrames: result.processed_count,
-      frames: result.frame_urls,
-      datasetPath: result.dataset_path,
-      datasetUrl: result.dataset_url
-    };
-
-    return NextResponse.json(body);
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+      },
+    });
   } catch (err: any) {
     console.error("Upload error:", err);
     return NextResponse.json(
