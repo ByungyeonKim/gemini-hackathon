@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
-        { error: "동영상 파일이 필요합니다." },
+        { error: "Video file is required." },
         { status: 400 }
       );
     }
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json(body);
   } catch {
     return NextResponse.json(
-      { error: "업로드 처리 중 오류가 발생했습니다." },
+      { error: "An error occurred while processing the upload." },
       { status: 500 }
     );
   }

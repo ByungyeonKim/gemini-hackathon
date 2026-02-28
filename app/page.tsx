@@ -17,7 +17,7 @@ export default function Home() {
             Geta
           </h1>
           <p className="mt-2 text-muted">
-            동영상 올리고 프레임만큼 포인트 받아가요
+            Upload videos and earn points for each frame
           </p>
         </header>
         <HomeUpload />

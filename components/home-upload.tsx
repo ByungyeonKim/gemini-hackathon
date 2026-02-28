@@ -14,6 +14,7 @@ interface UploadResult {
 }
 
 export function HomeUpload() {
+  const [textInput, setTextInput] = useState('')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null)
@@ -56,7 +57,7 @@ export function HomeUpload() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data?.error ?? '업로드에 실패했습니다.')
+        setError(data?.error ?? 'Upload failed.')
         return
       }
 
@@ -65,7 +66,7 @@ export function HomeUpload() {
       const frameList = Array.isArray(frames) ? frames : []
       setUploadResult({ savedFrames, earnedPoints, frames: frameList })
     } catch {
-      setError('업로드 중 오류가 발생했습니다.')
+      setError('An error occurred during upload.')
     } finally {
       setIsUploading(false)
     }
@@ -73,6 +74,19 @@ export function HomeUpload() {
 
   return (
     <div className="w-full max-w-2xl space-y-6">
+      <div className="space-y-2">
+        <label htmlFor="home-text-input" className="text-sm font-medium text-foreground">
+          Which object do you want to tag
+        </label>
+        <input
+          id="home-text-input"
+          type="text"
+          value={textInput}
+          onChange={(e) => setTextInput(e.target.value)}
+          placeholder="Enter description"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+        />
+      </div>
       <VideoUploadZone onFileSelect={setSelectedFile} />
       {selectedFile && (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
@@ -83,7 +97,7 @@ export function HomeUpload() {
               disabled={isUploading}
               className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:scale-100 disabled:opacity-60"
             >
-              {isUploading ? "업로드 중… 🚀" : "업로드하기"}
+              {isUploading ? "Uploading… 🚀" : "Upload"}
             </button>
           </div>
           {uploadResult && (
@@ -91,24 +105,24 @@ export function HomeUpload() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-lg" aria-hidden>🎉</span>
                 <p className="text-sm font-medium text-foreground">
-                  <span className="text-accent font-semibold">{uploadResult.savedFrames}</span>개 프레임 저장 ·
+                  <span className="text-accent font-semibold">{uploadResult.savedFrames}</span> frames saved ·
                   <span className="animate-points-count-pop ml-1 inline-block tabular-nums font-bold text-accent">
                     +{displayPoints}
                   </span>
-                  포인트 적립!
+                  points earned!
                 </p>
               </div>
               {(uploadResult.frames?.length ?? 0) > 0 && (
                 <div>
                   <h2 className="mb-3 text-sm font-semibold text-foreground">
-                    저장된 프레임
+                    Saved frames
                   </h2>
                   <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                     {(uploadResult.frames ?? []).map((src, i) => (
                       <li key={i} className="overflow-hidden rounded-xl border border-border shadow-sm">
                         <img
                           src={src}
-                          alt={`프레임 ${i + 1}`}
+                          alt={`Frame ${i + 1}`}
                           className="h-auto w-full object-cover"
                         />
                       </li>

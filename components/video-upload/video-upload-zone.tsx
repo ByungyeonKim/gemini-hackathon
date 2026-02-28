@@ -17,10 +17,10 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
   const validateFile = useCallback((file: File): string | null => {
     const validTypes = ["video/mp4", "video/webm", "video/quicktime", "video/x-msvideo"];
     if (!validTypes.includes(file.type)) {
-      return "MP4, WebM, MOV, AVI 형식만 업로드할 수 있습니다.";
+      return "Only MP4, WebM, MOV, AVI formats are supported.";
     }
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      return `파일 크기는 ${MAX_SIZE_MB}MB 이하여야 합니다.`;
+      return `File size must be ${MAX_SIZE_MB}MB or less.`;
     }
     return null;
   }, []);
@@ -92,7 +92,7 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
           accept={ACCEPT_VIDEO}
           onChange={handleChange}
           className="sr-only"
-          aria-label="동영상 파일 선택"
+          aria-label="Select video file"
         />
         {selectedFile && !error ? (
           <div className="flex flex-col items-center gap-3 p-4 text-center">
@@ -110,7 +110,7 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
               onClick={handleRemove}
               className="rounded-full bg-border/80 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent/20 hover:text-accent"
             >
-              다시 고를게요
+              Choose again
             </button>
           </div>
         ) : (
@@ -119,10 +119,10 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
               {isDragging ? "👋" : "📤"}
             </div>
             <p className="text-base font-medium text-foreground">
-              {isDragging ? "여기 떨궈요!" : "동영상 끌어다 놓기"}
+              {isDragging ? "Drop here!" : "Drag and drop video"}
             </p>
             <p className="text-sm text-muted">
-              또는 클릭해서 고르기 · MP4, WebM, MOV, AVI (최대 {MAX_SIZE_MB}MB)
+              or click to select · MP4, WebM, MOV, AVI (max {MAX_SIZE_MB}MB)
             </p>
           </div>
         )}
