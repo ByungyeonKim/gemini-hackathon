@@ -1,7 +1,9 @@
 ffmpeg-python==0.2.0
 future==1.0.0
-
-# Core libraries for frame extraction and image comparison
 numpy>=1.21.0
 opencv-python>=4.5.0
-scikit-image>=0.19.0  # provides skimage.metrics.ssim
+scikit-image>=0.19.0
+pillow>=10.0.0
+google-genai>=0.1.0
+supabase>=2.0.0
+python-dotenv>=1.0.0

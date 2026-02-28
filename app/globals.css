@@ -1,94 +1,139 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fefce8;
-  --foreground: #1c1917;
-  --accent: #f97316;
-  --accent-soft: #fb923c;
-  --surface: #ffffff;
-  --surface-hover: #fff7ed;
-  --border: #e7e5e4;
-  --muted: #78716c;
+  --background: #000000;
+  --foreground: #ffffff;
+  --accent: #00ff41;
+  /* CRT Green */
+  --accent-secondary: #ff00ff;
+  /* Neon Pink */
+  --surface: #0a0a0a;
+  --surface-secondary: #1a1a1a;
+  --border: #ffffff;
+  --border-thick: 4px;
+  --shadow-color: rgba(255, 255, 255, 0.5);
+  --brutalist-shadow: 4px 4px 0px var(--accent);
+  --brutalist-shadow-hover: 8px 8px 0px var(--accent-secondary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
+  --color-accent-secondary: var(--accent-secondary);
   --color-surface: var(--surface);
-  --color-surface-hover: var(--surface-hover);
+  --color-surface-secondary: var(--surface-secondary);
   --color-border: var(--border);
-  --color-muted: var(--muted);
-  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1c1917;
-    --foreground: #fafaf9;
-    --accent: #fb923c;
-    --surface: #292524;
-    --border: #44403c;
-    --muted: #a8a29e;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-mono), monospace;
+  background-image:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 3px 100%;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
-}
-
-@keyframes points-card-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+@keyframes glitch {
+  0% {
+    transform: translate(0);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  20% {
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    transform: translate(2px, 2px);
+  }
+
+  80% {
+    transform: translate(2px, -2px);
+  }
+
+  100% {
+    transform: translate(0);
   }
 }
 
-@keyframes points-count-pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.12); }
-  100% { transform: scale(1); }
+@keyframes scanline {
+  0% {
+    bottom: 100%;
+  }
+
+  100% {
+    bottom: 0%;
+  }
 }
 
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1); }
+.brutalist-card {
+  background: var(--surface);
+  border: var(--border-thick) solid var(--border);
+  box-shadow: var(--brutalist-shadow);
+  transition: all 0.2s ease;
 }
 
-.animate-float {
-  animation: float 2.5s ease-in-out infinite;
+.brutalist-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: var(--brutalist-shadow-hover);
 }
 
-.animate-wiggle {
-  animation: wiggle 0.4s ease-in-out;
+.brutalist-input {
+  background: var(--surface-secondary);
+  border: var(--border-thick) solid var(--border);
+  color: var(--accent);
+  padding: 1rem;
+  font-family: var(--font-mono), monospace;
+  outline: none;
 }
 
-.animate-points-card-in {
-  animation: points-card-in 0.4s ease-out forwards;
+.brutalist-input:focus {
+  border-color: var(--accent);
+  box-shadow: 2px 2px 0px var(--accent);
 }
 
-.animate-points-count-pop {
-  animation: points-count-pop 0.5s ease-out 0.3s both;
+.brutalist-button {
+  background: var(--accent);
+  color: #000;
+  border: var(--border-thick) solid #000;
+  box-shadow: 4px 4px 0px var(--foreground);
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.1s;
 }
 
-.animate-sparkle {
-  animation: sparkle 0.6s ease-out both;
+.brutalist-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--foreground);
+}
+
+.brutalist-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--foreground);
+}
+
+.glitch-text:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: var(--accent-secondary);
+}
+
+.scanline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 65, 0.1);
+  opacity: 0.1;
+  z-index: 100;
+  pointer-events: none;
+  animation: scanline 8s linear infinite;
 }

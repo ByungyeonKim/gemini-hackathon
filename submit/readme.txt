@@ -1,1 +1,0 @@
-python label_and_visualize.py --img_dir ./img --output_dir ./output_vis --json_out ./coco_labels.json

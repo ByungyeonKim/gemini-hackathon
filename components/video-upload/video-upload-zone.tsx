@@ -78,11 +78,10 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
   return (
     <div className="w-full space-y-4">
       <label
-        className={`flex min-h-[260px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all duration-200 ${
-          isDragging
-            ? "border-accent bg-accent/10 scale-[1.02]"
-            : "border-border bg-surface hover:border-accent/40 hover:bg-surface-hover/50"
-        }`}
+        className={`flex min-h-[300px] cursor-pointer flex-col items-center justify-center border-4 border-dashed transition-all duration-200 ${isDragging
+            ? "border-accent bg-accent/20 scale-[1.02]"
+            : "border-white bg-surface hover:border-accent-secondary"
+          }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -95,42 +94,46 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
           aria-label="Select video file"
         />
         {selectedFile && !error ? (
-          <div className="flex flex-col items-center gap-3 p-4 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/15 text-4xl">
-              🎬
+          <div className="flex flex-col items-center gap-6 p-8 text-center">
+            <div className="flex h-20 w-20 items-center justify-center border-4 border-accent bg-black text-5xl">
+              [REC]
             </div>
-            <p className="max-w-full truncate px-2 text-sm font-medium text-foreground">
-              {selectedFile.name}
-            </p>
-            <p className="text-sm tabular-nums text-muted">
-              {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
-            </p>
+            <div className="space-y-2">
+              <p className="max-w-full truncate font-black uppercase text-foreground">
+                IDENTIFIED: {selectedFile.name}
+              </p>
+              <p className="font-mono text-sm tabular-nums text-accent">
+                SIZE: {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+              </p>
+            </div>
             <button
               type="button"
               onClick={handleRemove}
-              className="rounded-full bg-border/80 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent/20 hover:text-accent"
+              className="brutalist-button py-2 bg-white text-black text-xs"
             >
-              Choose again
+              // RESET_IDENTIFICATION
             </button>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-3 p-6 text-center">
-            <div className="animate-float flex h-20 w-20 items-center justify-center rounded-2xl bg-accent/15 text-5xl">
-              {isDragging ? "👋" : "📤"}
+          <div className="flex flex-col items-center gap-6 p-8 text-center">
+            <div className="flex h-24 w-24 items-center justify-center border-4 border-white bg-black text-6xl">
+              {isDragging ? ">>" : "++"}
             </div>
-            <p className="text-base font-medium text-foreground">
-              {isDragging ? "Drop here!" : "Drag and drop video"}
-            </p>
-            <p className="text-sm text-muted">
-              or click to select · MP4, WebM, MOV, AVI (max {MAX_SIZE_MB}MB)
-            </p>
+            <div className="space-y-2">
+              <p className="text-2xl font-black uppercase tracking-tighter">
+                {isDragging ? "DROP_FOR_ANALYSIS" : "INITIALIZE_UPLOAD"}
+              </p>
+              <p className="text-xs font-bold text-accent">
+                MP4_WEBM_MOV_AVI // MAX_{MAX_SIZE_MB}MB
+              </p>
+            </div>
           </div>
         )}
       </label>
       {error && (
-        <p className="text-sm font-medium text-red-500" role="alert">
-          ⚠️ {error}
-        </p>
+        <div className="bg-red-500 p-4 font-black uppercase text-black">
+          CRITICAL_DRAG_ERROR: {error}
+        </div>
       )}
     </div>
   );

@@ -11,6 +11,8 @@ interface UploadResult {
   savedFrames: number
   earnedPoints: number
   frames: string[]
+  datasetPath?: string
+  datasetUrl?: string
 }
 
 export function HomeUpload() {
@@ -48,6 +50,7 @@ export function HomeUpload() {
     try {
       const formData = new FormData()
       formData.append('video', selectedFile)
+      formData.append('tag', textInput)
 
       const res = await fetch('/api/upload', {
         method: 'POST',
@@ -61,10 +64,10 @@ export function HomeUpload() {
         return
       }
 
-      const { savedFrames, frames } = data as UploadResponse
+      const { savedFrames, frames, datasetPath, datasetUrl } = data as UploadResponse
       const earnedPoints = savedFrames * POINTS_PER_FRAME
       const frameList = Array.isArray(frames) ? frames : []
-      setUploadResult({ savedFrames, earnedPoints, frames: frameList })
+      setUploadResult({ savedFrames, earnedPoints, frames: frameList, datasetPath, datasetUrl })
     } catch {
       setError('An error occurred during upload.')
     } finally {
@@ -73,57 +76,85 @@ export function HomeUpload() {
   }
 
   return (
-    <div className="w-full max-w-2xl space-y-6">
-      <div className="space-y-2">
-        <label htmlFor="home-text-input" className="text-sm font-medium text-foreground">
-          Which object do you want to tag
+    <div className="w-full max-w-2xl space-y-12">
+      <div className="space-y-4">
+        <label htmlFor="home-text-input" className="text-sm font-black uppercase tracking-widest text-accent">
+          // TAG_OBJECT_IDENTIFIER
         </label>
         <input
           id="home-text-input"
           type="text"
           value={textInput}
           onChange={(e) => setTextInput(e.target.value)}
-          placeholder="Enter description"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+          placeholder="ENTER_OBJECT_TYPE..."
+          className="brutalist-input w-full"
         />
       </div>
       <VideoUploadZone onFileSelect={setSelectedFile} />
       {selectedFile && (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+        <div className="flex flex-col gap-8">
           <div className="shrink-0">
             <button
               type="button"
               onClick={handleUpload}
               disabled={isUploading}
-              className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:scale-100 disabled:opacity-60"
+              className="brutalist-button w-full sm:w-auto"
             >
-              {isUploading ? "Uploading… 🚀" : "Upload"}
+              {isUploading ? "PROCESS_INITIATED..." : "EXECUTE_UPLOAD"}
             </button>
           </div>
           {uploadResult && (
-            <div className="animate-points-card-in min-w-0 flex-1 space-y-4 rounded-2xl border border-border bg-surface p-5 shadow-sm">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-lg" aria-hidden>🎉</span>
-                <p className="text-sm font-medium text-foreground">
-                  <span className="text-accent font-semibold">{uploadResult.savedFrames}</span> frames saved ·
-                  <span className="animate-points-count-pop ml-1 inline-block tabular-nums font-bold text-accent">
+            <div className="brutalist-card space-y-6 p-8">
+              <div className="flex flex-wrap items-center gap-4 border-b-2 border-dashed border-accent pb-4">
+                <span className="text-2xl" aria-hidden>[!]</span>
+                <p className="text-lg font-black uppercase">
+                  DATA_SAVED: <span className="text-accent">{uploadResult.savedFrames}</span> FRAMES //
+                  CREDITS: <span className="animate-points-count-pop ml-1 text-accent-secondary">
                     +{displayPoints}
                   </span>
-                  points earned!
                 </p>
               </div>
+              {uploadResult.datasetPath && (
+                <div className="bg-accent/10 border-2 border-accent p-6 space-y-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1">
+                      <p className="text-sm font-black uppercase text-accent">
+                        // AI_TRAINING_DATASET_READY
+                      </p>
+                      <p className="font-mono text-[10px] opacity-70">
+                        ID: {uploadResult.datasetPath}
+                      </p>
+                    </div>
+                    {uploadResult.datasetUrl && (
+                      <a
+                        href={uploadResult.datasetUrl}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="brutalist-button bg-accent text-black text-xs py-2 px-4 whitespace-nowrap"
+                      >
+                        DOWNLOAD_DATASET.ZIP
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-[10px] leading-tight opacity-50 border-t border-accent/30 pt-4">
+                    THIS ARCHIVE CONTAINS YOLO-FORMAT IMAGES, LABELS, AND DATA.YAML FOR IMMEDIATE MODEL TRAINING.
+                    UPLOAD TO YOUR TRAINING ENVIRONMENT TO INITIALIZE WEIGHT OPTIMIZATION.
+                  </p>
+                </div>
+              )}
               {(uploadResult.frames?.length ?? 0) > 0 && (
                 <div>
-                  <h2 className="mb-3 text-sm font-semibold text-foreground">
-                    Saved frames
+                  <h2 className="mb-6 text-sm font-black uppercase tracking-widest text-accent">
+                    // INSPECTED_DATA_STREAM
                   </h2>
-                  <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                  <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     {(uploadResult.frames ?? []).map((src, i) => (
-                      <li key={i} className="overflow-hidden rounded-xl border border-border shadow-sm">
+                      <li key={i} className="brutalist-card aspect-video overflow-hidden border-2">
                         <img
                           src={src}
                           alt={`Frame ${i + 1}`}
-                          className="h-auto w-full object-cover"
+                          className="h-full w-full object-cover grayscale transition-all hover:grayscale-0"
                         />
                       </li>
                     ))}
@@ -133,9 +164,9 @@ export function HomeUpload() {
             </div>
           )}
           {error && (
-            <p className="text-sm font-medium text-red-500" role="alert">
-              ⚠️ {error}
-            </p>
+            <div className="bg-red-500 p-4 font-black uppercase text-black">
+              ERROR_DETECTED: {error}
+            </div>
           )}
         </div>
       )}
