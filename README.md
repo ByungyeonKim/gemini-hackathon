@@ -40,7 +40,7 @@ Specify any detectable object (e.g., car, person, traffic light) to generate a f
 
 ### 🧠 Gemini Relevance Filtering
 
-- Uses Gemini 1.5 Flash to:
+Uses Gemini 2.5 Flash to:
 - Analyze extracted frames
 - Determine semantic relevance
 - Remove low-signal or irrelevant frames
