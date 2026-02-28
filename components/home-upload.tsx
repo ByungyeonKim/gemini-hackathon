@@ -81,28 +81,31 @@ export function HomeUpload() {
               type="button"
               onClick={handleUpload}
               disabled={isUploading}
-              className="rounded-lg border-2 border-accent bg-accent px-5 py-2.5 font-mono text-sm font-medium text-background shadow-glow transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:scale-100 disabled:opacity-60"
             >
-              {isUploading ? "... uploading" : "upload"}
+              {isUploading ? "업로드 중… 🚀" : "업로드하기"}
             </button>
           </div>
           {uploadResult && (
-            <div className="animate-points-card-in min-w-0 flex-1 space-y-4 rounded-xl border border-border bg-surface p-4">
-              <p className="font-mono text-sm text-foreground">
-                <span className="text-accent">{uploadResult.savedFrames}</span> frames saved ·{' '}
-                <span className="animate-points-count-pop inline-block tabular-nums text-accent">
-                  +{displayPoints}
-                </span>
-                {' '}pts
-              </p>
+            <div className="animate-points-card-in min-w-0 flex-1 space-y-4 rounded-2xl border border-border bg-surface p-5 shadow-sm">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-lg" aria-hidden>🎉</span>
+                <p className="text-sm font-medium text-foreground">
+                  <span className="text-accent font-semibold">{uploadResult.savedFrames}</span>개 프레임 저장 ·
+                  <span className="animate-points-count-pop ml-1 inline-block tabular-nums font-bold text-accent">
+                    +{displayPoints}
+                  </span>
+                  포인트 적립!
+                </p>
+              </div>
               {(uploadResult.frames?.length ?? 0) > 0 && (
                 <div>
-                  <h2 className="mb-3 font-mono text-xs font-medium uppercase tracking-wider text-muted">
-                    frames
+                  <h2 className="mb-3 text-sm font-semibold text-foreground">
+                    저장된 프레임
                   </h2>
                   <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                     {(uploadResult.frames ?? []).map((src, i) => (
-                      <li key={i} className="overflow-hidden rounded-lg border border-border">
+                      <li key={i} className="overflow-hidden rounded-xl border border-border shadow-sm">
                         <img
                           src={src}
                           alt={`프레임 ${i + 1}`}
@@ -116,8 +119,8 @@ export function HomeUpload() {
             </div>
           )}
           {error && (
-            <p className="font-mono text-xs font-medium text-red-400" role="alert">
-              error: {error}
+            <p className="text-sm font-medium text-red-500" role="alert">
+              ⚠️ {error}
             </p>
           )}
         </div>

@@ -4,28 +4,20 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background font-sans">
       <div
-        className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(180deg,transparent_0%,var(--background)_70%)],bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(34,211,238,0.08)_0%,transparent_50%)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(var(--accent) 1px, transparent 1px),
-            linear-gradient(90deg, var(--accent) 1px, transparent 1px)`,
-          backgroundSize: "48px 48px",
-        }}
+        className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(251,146,60,0.15)_0%,transparent_50%)]"
         aria-hidden
       />
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col px-4 py-16">
-        <header className="mb-10">
-          <h1 className="font-mono text-2xl font-semibold tracking-tight text-foreground">
+        <header className="mb-10 text-center sm:text-left">
+          <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent">
+            <span aria-hidden>✨</span>
+            <span>Gemini Enhance Training Algorithm</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Geta
           </h1>
-          <p className="mt-1 font-mono text-sm text-muted">
-            Gemini Enhance Training Algorithm
-          </p>
-          <p className="mt-3 font-mono text-xs text-muted">
-            // MP4, WebM, MOV, AVI · max 500MB
+          <p className="mt-2 text-muted">
+            동영상 올리고 프레임만큼 포인트 받아가요
           </p>
         </header>
         <HomeUpload />

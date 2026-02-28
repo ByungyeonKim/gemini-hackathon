@@ -78,10 +78,10 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
   return (
     <div className="w-full space-y-4">
       <label
-        className={`flex min-h-[240px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-200 ${
+        className={`flex min-h-[260px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all duration-200 ${
           isDragging
-            ? "border-accent bg-accent/5 shadow-glow"
-            : "border-border bg-surface hover:border-accent/50"
+            ? "border-accent bg-accent/10 scale-[1.02]"
+            : "border-border bg-surface hover:border-accent/40 hover:bg-surface-hover/50"
         }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -96,40 +96,40 @@ export function VideoUploadZone({ onFileSelect }: VideoUploadZoneProps) {
         />
         {selectedFile && !error ? (
           <div className="flex flex-col items-center gap-3 p-4 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-accent/30 bg-accent/10 font-mono text-lg text-accent">
-              [vid]
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/15 text-4xl">
+              🎬
             </div>
-            <p className="font-mono text-sm text-foreground break-all">
+            <p className="max-w-full truncate px-2 text-sm font-medium text-foreground">
               {selectedFile.name}
             </p>
-            <p className="font-mono text-xs tabular-nums text-muted">
+            <p className="text-sm tabular-nums text-muted">
               {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
             </p>
             <button
               type="button"
               onClick={handleRemove}
-              className="rounded border border-border bg-surface-hover px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-foreground"
+              className="rounded-full bg-border/80 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent/20 hover:text-accent"
             >
-              rm file
+              다시 고를게요
             </button>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3 p-6 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-accent/40 bg-accent/10 font-mono text-2xl text-accent">
-              {isDragging ? "[drop]" : "[+]"}
+            <div className="animate-float flex h-20 w-20 items-center justify-center rounded-2xl bg-accent/15 text-5xl">
+              {isDragging ? "👋" : "📤"}
             </div>
-            <p className="font-mono text-sm text-foreground">
-              {isDragging ? "drop here" : "drag & drop or click"}
+            <p className="text-base font-medium text-foreground">
+              {isDragging ? "여기 떨궈요!" : "동영상 끌어다 놓기"}
             </p>
-            <p className="font-mono text-xs text-muted">
-              MP4 · WebM · MOV · AVI · max {MAX_SIZE_MB}MB
+            <p className="text-sm text-muted">
+              또는 클릭해서 고르기 · MP4, WebM, MOV, AVI (최대 {MAX_SIZE_MB}MB)
             </p>
           </div>
         )}
       </label>
       {error && (
-        <p className="font-mono text-xs font-medium text-red-400" role="alert">
-          error: {error}
+        <p className="text-sm font-medium text-red-500" role="alert">
+          ⚠️ {error}
         </p>
       )}
     </div>
